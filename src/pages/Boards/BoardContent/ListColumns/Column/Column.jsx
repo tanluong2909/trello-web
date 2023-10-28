@@ -162,7 +162,7 @@ const Column = ({ column }) => {
             height: (theme) => theme.trello.columnFooterHeight,
           }}
         >
-          <Button startIcon=<AddCardIcon />>Add new card</Button>
+          <Button startIcon={<AddCardIcon/>}>Add new card</Button>
           <Tooltip title="Drag to move">
             <DragHandleIcon sx={{ cursor: "pointer" }} />
           </Tooltip>
