@@ -30,7 +30,7 @@ const Templates = () => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        endIcon= <KeyboardArrowDownIcon/>
+        endIcon={<KeyboardArrowDownIcon/>}
         sx={{
           color: 'white'
         }}
