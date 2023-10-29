@@ -10,7 +10,7 @@ import ContentCut from "@mui/icons-material/ContentCut";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import Cloud from "@mui/icons-material/Cloud";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const Workspaces = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -32,7 +32,7 @@ const Workspaces = () => {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon/>}
         sx={{
-          color: 'white'
+          color: "white",
         }}
       >
         Workspaces
@@ -52,7 +52,7 @@ const Workspaces = () => {
           horizontal: "left",
         }}
         sx={{
-            mt: 4
+          mt: 4,
         }}
       >
         <MenuItem>
