@@ -21,7 +21,6 @@ const Card = ({ card }) => {
     transition,
     isDragging,
   } = useSortable({id: card._id, data: {...card}} );
-
   const dndKitCard = {
     touchAction: 'none',
     transform: CSS.Translate.toString(transform),
@@ -32,9 +31,9 @@ const Card = ({ card }) => {
 
   const shouldShowCardAction = () => {
     return (
-      !!card.memberIds.length ||
-      !!card.comments.length ||
-      !!card.attachments.length
+      !!card?.memberIds?.length ||
+      !!card?.comments?.length ||
+      !!card?.attachments?.length
     );
   };
 
@@ -47,7 +46,15 @@ const Card = ({ card }) => {
       sx={{
         cursor: "pointer",
         boxShadow: "0 1px 1px rgba(0,0,0,0.2)",
-        overflow: "unset",
+        // overflow: "unset",
+        // display: card?.FE_PlaceholderCard ? 'none' : 'block'
+        overflow: card?.FE_PlaceholderCard ? 'hide' : 'unset',
+        height: card?.FE_PlaceholderCard ? '0px' : 'unset',
+        border: card.FE_PlaceholderCard ? 'none': '1px solid transparent',
+        '&:hover': {
+          borderColor: (theme) => theme.palette.primary.main,
+          scale: '1.0125'
+        }
       }}
     >
       {card?.cover && (
@@ -59,25 +66,25 @@ const Card = ({ card }) => {
       )}
       <CardContent sx={{ p: 1.5, "&:last-child": { p: 1.5 } }}>
         <Typography variant="h6" component="div">
-          {card.title}
+          {card?.title}
         </Typography>
       </CardContent>
 
       {shouldShowCardAction() && (
         <CardActions sx={{ p: "0 4px 8px 4px" }}>
-          {!!card.memberIds.length && (
+          {!!card?.memberIds?.length && (
             <Button size="small" startIcon={<GroupIcon />}>
-              {card.memberIds.length}
+              {card?.memberIds?.length}
             </Button>
           )}
-          {!!card.comments.length && (
+          {!!card?.comments?.length && (
             <Button size="small" startIcon={<CommentIcon />}>
-              {!!card.comments && card.comments.length}
+              {!!card?.comments && card?.comments?.length}
             </Button>
           )}
-          {!!card.attachments.length && (
+          {!!card?.attachments?.length && (
             <Button size="small" startIcon={<AttachmentIcon />}>
-              {card.attachments.length}
+              {card?.attachments?.length}
             </Button>
           )}
         </CardActions>

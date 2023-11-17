@@ -10,7 +10,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { Tooltip } from "@mui/material";
-const BoardBar = ({board}) => {
+const BoardBar = ({ board }) => {
   const StyleChip = {
     "& .MuiSvgIcon-root": {
       color: "white",
@@ -47,13 +47,13 @@ const BoardBar = ({board}) => {
           clickable
           sx={StyleChip}
           icon={<DashboardIcon />}
-          label={board.title}
+          label={board?.title}
         />
         <Chip
           clickable
           sx={StyleChip}
           icon={<VpnLockIcon />}
-          label={board.type.charAt(0).toUpperCase() + board.type.slice(1)}
+          label={board?.type?.charAt(0).toUpperCase() + board?.type?.slice(1)}
         />
         <Chip
           clickable

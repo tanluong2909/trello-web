@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import ListColumns from "./ListColumns/ListColumns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { mapOrder } from "../../../utils/sorts";
 import {
   DndContext,
@@ -11,25 +11,29 @@ import {
   DragOverlay,
   defaultDropAnimationSideEffects,
   closestCorners,
+  closestCenter,
+  pointerWithin,
+  rectIntersection,
+  getFirstCollision
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import Column from "./ListColumns/Column/Column";
 import Card from "./ListColumns/Column/ListCards/Card/Card";
-import { cloneDeep } from "lodash";
-
+import { cloneDeep, filter, isEmpty } from "lodash";
+import { generatePlaceholderCard } from "../../../utils/formatters";
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
   CARD: "ACTIVE_DRAG_ITEM_TYPE_CARD",
 };
 
-const BoardContent = ({ board }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) => {
   const [orderedColumns, setOrderedColumns] = useState([]);
   const [activeDragItemId, setActiveDragItemId] = useState(null);
   const [activeDragItemType, setActiveDragItemType] = useState(null);
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
     useState(null);
-
+  const lastOverId = useRef(null);
   // const pointerSensor = useSensor(PointerSensor, {
   //   activationConstraint: { distance: 10 },
   // });
@@ -44,7 +48,6 @@ const BoardContent = ({ board }) => {
   useEffect(() => {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, "_id"));
   }, [board]);
-
   const findColumByCardId = (cardId) => {
     return orderedColumns.find((column) =>
       column.cards.map((card) => card._id)?.includes(cardId)
@@ -80,6 +83,11 @@ const BoardContent = ({ board }) => {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(
           (card) => card._id !== activeDraggingCardId
         );
+
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
+
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
           (card) => card._id
         );
@@ -96,6 +104,9 @@ const BoardContent = ({ board }) => {
             ...activeDraggingCardData, columnId: nextOverColumn._id
           }
         );
+
+        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
+
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
           (card) => card._id
         );
@@ -184,7 +195,6 @@ const BoardContent = ({ board }) => {
 
           targetColumn.cards = dndOrderedCards
           targetColumn.cardOrderIds = dndOrderedCards.map(card => card._id)
-          console.log(targetColumn.cardOrderIds)
           return nextColumns
         })
       }
@@ -203,10 +213,10 @@ const BoardContent = ({ board }) => {
           oldColumnIndex,
           newColumnIndex
         );
+        moveColumns(dndOrderedColumns)
         setOrderedColumns(dndOrderedColumns)
       }
     }
-
     setActiveDragItemData(null);
     setActiveDragItemId(null);
     setActiveDragItemType(null);
@@ -222,23 +232,59 @@ const BoardContent = ({ board }) => {
       },
     }),
   };
+
+  const collisionDetectionStrategy = useCallback((args) => {
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN){
+      return closestCorners({...args})
+    }
+
+    const pointerIntersections = pointerWithin(args)
+
+    if( !pointerIntersections.length ) {
+      return
+    }
+    // const intersections = pointerIntersections?.length > 0 ? pointerIntersections : rectIntersection(args)
+
+    let overId = getFirstCollision(pointerIntersections, 'id')
+
+    if (overId) {
+      const checkColumn = orderedColumns.find(column => column._id === overId)
+
+      if (checkColumn) {
+        overId = closestCorners({
+          ...args,
+          droppableContainers: args.droppableContainers.filter(container => {
+            return  (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))
+          })
+        })[0]?.id
+      }
+
+      lastOverId.current = overId
+      return [{id: overId }]
+    }
+
+    return lastOverId.current ? [{id: lastOverId.current}] : []
+  }, [activeDragItemType, orderedColumns])
+
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      // collisionDetection={closestCorners}
+      collisionDetection={collisionDetectionStrategy}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
-      onDragStart={handleDragStart}
     >
       <Box
         sx={{
           width: "100%",
-          height: (theme) => theme.trello.BoardContentHeight,
+          height: (theme) => theme.trello.boardContentHeight,
           bgcolor: (theme) =>
             theme.palette.mode === "dark" ? "#2c3e50" : "#1565c",
+          p: '10px 0'
         }}
-      >
-        <ListColumns columns={orderedColumns} />
+      > 
+        <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard} />
         <DragOverlay dropAnimation={dropAnimation}>
           {activeDragItemType && null}
           {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
