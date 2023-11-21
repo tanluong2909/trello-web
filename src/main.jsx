@@ -8,13 +8,16 @@ import { store } from './redux/store'
 import { Provider } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { RouterProvider } from 'react-router-dom'
+import  Router  from './router'
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <CssVarsProvider theme={theme}>
       <CssBaseline />
       <Provider store={store}>
-      <App />
+      <RouterProvider router={Router}/>
       <ToastContainer position="bottom-left" theme="colored"/>
       </Provider>
     </CssVarsProvider>

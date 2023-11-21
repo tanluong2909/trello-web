@@ -49,7 +49,10 @@ const Column = ({ column, createNewCard }) => {
   const orderedCard = mapOrder(column?.cards, column?.cardOrderIds, "_id");
   
 
-  const toggledNewCard =  () => setNewCard(!newCard)
+  const toggledNewCard =  () =>{
+    setNewCard(!newCard)
+    setAnchorEl(null);
+  } 
   const addNewCard = async () => {
     if(!newCardTitle){
       toast.error('Please enter card title!', {position: 'bottom-right'});
@@ -131,7 +134,7 @@ const Column = ({ column, createNewCard }) => {
                 mt: 4,
               }}
             >
-              <MenuItem>
+              <MenuItem onClick={toggledNewCard}>
                 <ListItemIcon>
                   <AddCardIcon fontSize="small" />
                 </ListItemIcon>
@@ -172,7 +175,7 @@ const Column = ({ column, createNewCard }) => {
           </Box>
         </Box>
         {/* {ListCard} */}
-        <ListCards cards={orderedCard} />
+        <ListCards cards={orderedCard}  />
         {/* {Footer} */}
         <Box
           sx={{

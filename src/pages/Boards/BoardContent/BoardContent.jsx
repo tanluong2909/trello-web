@@ -251,7 +251,7 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
       const checkColumn = orderedColumns.find(column => column._id === overId)
 
       if (checkColumn) {
-        overId = closestCorners({
+        overId = closestCenter({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             return  (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))

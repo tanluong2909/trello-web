@@ -1,5 +1,5 @@
 import Container from "@mui/material/Container";
-import AppBar from "../../components/AppBar/AppBar";
+
 import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
 import { mockData } from "../../apis/mock-data"
@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { fetchBoardDetailsAPI, createNewColumnAPI, createNewCardAPI, updateBoardDetailsAPI } from "../../apis/"
 import { generatePlaceholderCard } from "../../utils/formatters"
 import { isEmpty } from "lodash"
+import { Register } from "../Auth/Register";
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -77,7 +78,8 @@ function Board() {
         backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#2c3e50' : "primary.main" 
       }}
     >
-      <AppBar />
+
+      
       <BoardBar board={board}/> 
       <BoardContent 
       board={board} 
@@ -85,7 +87,6 @@ function Board() {
       createNewCard={createNewCard}
       moveColumns={moveColumns}
       />
-
     </Container>
   );
 }

@@ -29,10 +29,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AppBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const nav = useNavigate()
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -65,7 +67,7 @@ const AppBar = () => {
         }}
       >
         <AppsIcon />
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box onClick={ () => nav('/')} sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
           <SvgIcon component={TrelloIcon} inheritViewBox fontSize={"small"} />
           <Typography variant="" fontWeight={700}>
             Trello
@@ -217,6 +219,7 @@ const AppBar = () => {
           </MenuItem>
         </Menu>
       </Box>
+      
     </Box>
   );
 };

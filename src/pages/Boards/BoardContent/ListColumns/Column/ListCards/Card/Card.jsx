@@ -7,7 +7,7 @@ import CardMedia from "@mui/material/CardMedia";
 import GroupIcon from "@mui/icons-material/Group";
 import CommentIcon from "@mui/icons-material/Comment";
 import AttachmentIcon from "@mui/icons-material/Attachment";
-
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 
@@ -53,9 +53,10 @@ const Card = ({ card }) => {
         border: card.FE_PlaceholderCard ? 'none': '1px solid transparent',
         '&:hover': {
           borderColor: (theme) => theme.palette.primary.main,
-          scale: '1.0125'
+          // endIcon: <ModeEditIcon/>
         }
       }}
+      
     >
       {card?.cover && (
         <CardMedia
@@ -64,10 +65,37 @@ const Card = ({ card }) => {
           title="green iguana"
         />
       )}
-      <CardContent sx={{ p: 1.5, "&:last-child": { p: 1.5 } }}>
-        <Typography variant="h6" component="div">
+      <CardContent  
+        sx={{ 
+          p: 0,
+          "&:last-child": { p: '0px' } ,
+          display: 'flex',
+          alignItems: 'center',
+          m: 1,
+          justifyContent: 'space-between',
+          '&:hover :last-child': {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          }} >
+        <Button 
+          sx={{
+            mt: 0,
+          }} 
+          variant="h6" 
+        >
           {card?.title}
-        </Typography>
+        </Button>
+        <Button 
+          sx={{
+              display: 'none',
+              borderRadius: '10px',
+            }} >
+          <ModeEditIcon 
+            
+          />
+        </Button>
       </CardContent>
 
       {shouldShowCardAction() && (
