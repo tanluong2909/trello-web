@@ -30,8 +30,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"
 
 const AppBar = () => {
+  const user = useSelector( state => state.auth.user)
+  console.log('first', user)
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const nav = useNavigate()
@@ -144,7 +147,10 @@ const AppBar = () => {
         <Box
           sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
         >
-          <Tooltip title="Account settings">
+          <Tooltip 
+            title={user.username}
+            // title="Account settings"
+          >
             <IconButton
               onClick={handleClick}
               size="small"

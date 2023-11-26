@@ -1,12 +1,23 @@
-import React, {useState} from 'react'
+import  { useState } from 'react'
 import {TextField, Button, Stack, Box} from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { styleTextField } from '../../../utils/formatters'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import { toast } from 'react-toastify'
+import { createNewUSerAPI } from '../../../apis' 
+import { useDispatch } from 'react-redux'
+import { setUserAccess } from '../../../redux/auth'
+
 export const Register = () => {
     const [passwordShown, setPasswordShown] = useState(false);
     const [cpasswordShown, setCpasswordShown] = useState(false);
+    const [user, setUser] = useState([])
+    const dispatch = useDispatch()
+    // useEffect(() => {
+    //     createNewUSerAPI()
+    //     setUser(user)
+    // }, [user])
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
     };
@@ -16,14 +27,34 @@ export const Register = () => {
     const nav = useNavigate()
     const { register, handleSubmit, formState: {errors}, watch} = useForm({
         defaultValues:{
-            userName: '',
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
         }
     })
     const onSubmit = (data) => {
-        console.log(data)
+        // console.log('data ',JSON.stringify(data))
+        setUser([...user],
+            [{
+                username: data.username,
+                email: data.email,
+                password: data.password,
+                confirmPassword: data.confirmPassword
+            }]
+            )
+        createNewUSerAPI(data)
+        dispatch(setUserAccess({user: data}))
+        // console.log('user' ,user)
+        toast.success('Success user', {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            theme: "light",
+            })
+        // setTimeout(() => submitSuccess(), 2000)
         submitSuccess()
     }
     const submitSuccess = () => nav('/page/login') 
@@ -55,15 +86,15 @@ export const Register = () => {
                 <TextField 
                     label="Username" 
                     type='text'
-                    {...register('userName', {
+                    {...register('username', {
                         required: 'Username is required',
                         pattern: {
                             value: /^([a-zA-Z0-9]){6,16}$/,
                             message: 'Invalid username format'
                         }
                     })}
-                    error={!!errors.userName}
-                    helperText={errors.userName?.message}
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
                     sx={styleTextField}
                 />
                 <TextField 

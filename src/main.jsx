@@ -17,8 +17,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <CssVarsProvider theme={theme}>
       <CssBaseline />
       <Provider store={store}>
-      <RouterProvider router={Router}/>
-      <ToastContainer position="bottom-left" theme="colored"/>
+        <RouterProvider router={Router}/>
+        <ToastContainer position="bottom-left" theme="colored"/>
       </Provider>
     </CssVarsProvider>
   </React.StrictMode>

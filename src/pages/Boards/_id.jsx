@@ -8,10 +8,14 @@ import { fetchBoardDetailsAPI, createNewColumnAPI, createNewCardAPI, updateBoard
 import { generatePlaceholderCard } from "../../utils/formatters"
 import { isEmpty } from "lodash"
 import { Register } from "../Auth/Register";
+import { useDispatch } from "react-redux"
+import { boardData } from "../../redux/auth";
+import { useSelector } from "react-redux"
 
 function Board() {
-  const [board, setBoard] = useState(null)
-
+  const [board, setBoard] = useState([])
+  // const boardData = useSelector(state => state.boardData?.value)
+  const dispatch = useDispatch()
   useEffect(() =>{
     const boardId = '6554647a3ecd66a6994395fb'
     fetchBoardDetailsAPI(boardId).then(board => {
@@ -24,49 +28,49 @@ function Board() {
       setBoard(board)
     })
   }, [])
-
+  dispatch(boardData({board: board}))
   const createNewColumn = async (newColumnData) => {
-    const createdColumn = await createNewColumnAPI({
-      ...newColumnData,
-      boardId: board._id
-    })
+    // const createdColumn = await createNewColumnAPI({
+    //   ...newColumnData,
+    //   boardId: board._id
+    // })
 
-    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
-    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+    // createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    // createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
 
-    const newBoard = { ...board }
-    newBoard.columns.push(createdColumn)
-    newBoard.columnOrderIds.push(createdColumn._id)
+    // const newBoard = { ...board }
+    // newBoard.columns.push(createdColumn)
+    // newBoard.columnOrderIds.push(createdColumn._id)
 
-    setBoard(newBoard)
+    // setBoard(newBoard)
   }
 
   const createNewCard = async (newCardData) => {
-    const createdCard = await createNewCardAPI({
-      ...newCardData,
-      boardId: board._id
-    })
+    // const createdCard = await createNewCardAPI({
+    //   ...newCardData,
+    //   boardId: board._id
+    // })
 
-    const newBoard = {...board}
-    const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    // const newBoard = {...board}
+    // const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
 
-    if (columnToUpdate) {
-      columnToUpdate.cards.push(createdCard)
-      columnToUpdate.cardOrderIds.push(createdCard._id)
-    }
-    setBoard(newBoard)
+    // if (columnToUpdate) {
+    //   columnToUpdate.cards.push(createdCard)
+    //   columnToUpdate.cardOrderIds.push(createdCard._id)
+    // }
+    // setBoard(newBoard)
   }
 
   const moveColumns = async (dndOrderedColumns) => {
-    const dndOrderedColumnIds = dndOrderedColumns.map(column => column._id)
+    // const dndOrderedColumnIds = dndOrderedColumns.map(column => column._id)
 
-    const newBoard = {...board}
+    // const newBoard = {...board}
 
-    newBoard.columns = dndOrderedColumns
-    newBoard.columnOrderIds = dndOrderedColumnIds
-    setBoard(newBoard)
+    // newBoard.columns = dndOrderedColumns
+    // newBoard.columnOrderIds = dndOrderedColumnIds
+    // setBoard(newBoard)
 
-    await updateBoardDetailsAPI(newBoard._id, {columnOrderIds: dndOrderedColumnIds})
+    // await updateBoardDetailsAPI(newBoard._id, {columnOrderIds: dndOrderedColumnIds})
 
   }
   return (

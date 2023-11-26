@@ -12,16 +12,19 @@ import { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { addColumn } from "../../../../redux/auth"
 const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
   const [newColumn, setNewColumn] = useState(true)
   const [loading, setLoading] = useState(true)
   const [newColumnTitle, setNewColumnTitle] = useState('')
-
+  const dispatch = useDispatch()
   useEffect(() => {
     if ( columns ) {
       setLoading(false)
     }
   }, [columns])
+
   const toggledNewColumn = () => setNewColumn(!newColumn)
   
   const addNewColumn = async () => {
@@ -30,12 +33,11 @@ const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
       return
     }
     // Goi API tai day
-
     const newColumnData = {
       title: newColumnTitle
     }
     await createNewColumn(newColumnData)
-
+    dispatch(addColumn(newColumnData))
     setNewColumnTitle('')
     toggledNewColumn()
   }

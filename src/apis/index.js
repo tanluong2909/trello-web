@@ -21,3 +21,12 @@ export const createNewCardAPI = async (cardId) => {
     return request.data
 }
 
+export const createNewUSerAPI = async (userId) => {    
+    const request = await axios.post(`${API_ROOT}/v1/users`, userId)    
+    return request.data
+}
+
+export const fetchUSerAPI = async (userId) => {    
+    const request = await axios.get(`${API_ROOT}/v1/users/${userId}`)    
+    return request.data
+}

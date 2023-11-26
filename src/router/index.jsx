@@ -5,6 +5,7 @@ import AppBar from '../components/AppBar/AppBar.jsx'
 import { Register } from "../pages/Auth/Register/index.jsx"
 import { Login } from "../pages/Auth/Login/index.jsx"
 import Home  from "../pages/Auth/_id.jsx"
+
 const Router = createBrowserRouter([
       { 
         path: '/',
